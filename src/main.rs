@@ -1,4 +1,5 @@
 use std::io; 
+mod amoritization;
 
 fn main() {
     println!("Enter the loan principal:");
@@ -28,22 +29,20 @@ fn main() {
     	}
     };
     
-    // Calculate Monthly Payment 
-    let num_payments: i32 = term_years * 12;
-    let monthly_rate: f64 = interest_rate / 12.0;
-    let rp = (1.0 + monthly_rate).powi(num_payments);
-    let monthly_payment: f64 = principal * ((monthly_rate * rp)/(rp - 1.0));
+    let schedule = amoritization::amoritization_schedule(principal, interest_rate, term_years * 12);
     
-    
-    println!("Your monthly payment will be ${:.2}", monthly_payment);
-    println!("Schedule:");
-    let mut balance = principal;
-    for i in 0..num_payments {
-    	let interest = balance * monthly_rate;
-    	let principal_payment = monthly_payment - interest;
-    	balance = balance - principal_payment;
-    	println!("Payment {}: Balance: {:.2}, Interest {:.2}, Principal {:.2}", i + 1, balance, interest, principal_payment); 
+    for i in 0..schedule.len()
+    {
+    	println!("{}\n\tPayment: ${:.2} Balance: ${:.2} Interest: ${:.2} Principal: ${:.2} Total Interest: ${:.2} Total Cost: ${:.2}",
+    		schedule[i].payment_number,
+    		schedule[i].payment,
+    		schedule[i].balance,
+    		schedule[i].interest,
+    		schedule[i].principal,
+    		schedule[i].running_interest,
+    		schedule[i].total_cost);
     }
+    
 }
 
 fn get_input<T: std::str::FromStr>() -> Result<T, T::Err> {
