@@ -1,5 +1,6 @@
 use std::io; 
-mod amoritization;
+mod amortization;
+mod loan;
 
 fn main() {
     println!("Enter the loan principal:");
@@ -29,7 +30,13 @@ fn main() {
     	}
     };
     
-    let schedule = amoritization::amoritization_schedule(principal, interest_rate, term_years * 12);
+    let loan = loan::Loan {
+    	original_principal: principal,
+    	interest_rate,
+    	term_years
+    };
+    
+    let schedule = amortization::amortization_schedule_from_loan(loan);
     
     for i in 0..schedule.len()
     {

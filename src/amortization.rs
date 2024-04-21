@@ -1,4 +1,5 @@
-pub struct AmoritizationPayment {
+/// A single entry in an amortization schedule 
+pub struct AmortizationPayment {
 	/// Which payment in the schedule this is 
 	pub payment_number: i32,
 
@@ -19,15 +20,17 @@ pub struct AmoritizationPayment {
 	/// The total amount of interest that has been paid after this payment
 	pub running_interest: f64,
 	
-	
 	/// The total cost of the loan after this payment - the sum of this and all prior 
 	/// interest + principal payments
 	pub total_cost: f64,
 }
 
-pub fn amoritization_schedule(principal: f64, interest: f64, num_payments: i32) -> Vec<AmoritizationPayment> {
-	let mut schedule = Vec::new();
-	
+pub fn amortization_schedule_from_loan(loan: super::loan::Loan) -> Vec<AmortizationPayment> {
+	amortization_schedule(loan.original_principal, loan.interest_rate, loan.term_years * 12)
+}
+
+pub fn amortization_schedule(principal: f64, interest: f64, num_payments: i32) -> Vec<AmortizationPayment> {
+	let mut schedule = Vec::new();	
 
 	let monthly_rate: f64 = interest / 12.0;
     let rp = (1.0 + monthly_rate).powi(num_payments);
@@ -46,7 +49,7 @@ pub fn amoritization_schedule(principal: f64, interest: f64, num_payments: i32) 
     	interest_accumulator += interest;
     	principal_accumulator += principal;
     	
-    	schedule.push(AmoritizationPayment{
+    	schedule.push(AmortizationPayment{
     		payment_number: i + 1,
     		payment: monthly_payment,
     		principal,
