@@ -30,7 +30,7 @@ fn main() {
     	}
     };
     
-    let loan = loan::Loan {
+    let loan = loan::NaiveLoan {
     	original_principal: principal,
     	interest_rate,
     	term_years

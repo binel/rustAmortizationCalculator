@@ -25,7 +25,7 @@ pub struct AmortizationPayment {
 	pub total_cost: f64,
 }
 
-pub fn amortization_schedule_from_loan(loan: super::loan::Loan) -> Vec<AmortizationPayment> {
+pub fn amortization_schedule_from_loan(loan: super::loan::NaiveLoan) -> Vec<AmortizationPayment> {
 	amortization_schedule(loan.original_principal, loan.interest_rate, loan.term_years * 12)
 }
 
